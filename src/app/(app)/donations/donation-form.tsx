@@ -123,9 +123,9 @@ export function DonationForm({
         </div>
       )}
 
-      {/* OCR scan */}
-      <div className="rounded-xl border border-dashed border-refresh-surface-3 bg-refresh-surface-2 p-3">
-        <p className="mb-2 text-xs text-refresh-muted">{t.ocrHint}</p>
+      {/* OCR scan — light/white panel so it stands out on the dark page */}
+      <div className="rounded-xl border border-dashed border-black/15 bg-white p-3 text-refresh-bg">
+        <p className="mb-2 text-xs text-refresh-bg/60">{t.ocrHint}</p>
         {/* gallery / files — no capture, so mobile shows the photo library */}
         <input
           ref={fileRef}
@@ -144,17 +144,27 @@ export function DonationForm({
           onChange={(e) => { const f = e.target.files?.[0]; if (f) handleScan(f); e.target.value = ""; }}
         />
         <div className="flex flex-wrap gap-2">
-          <button type="button" className="btn-ghost" disabled={scanning} onClick={() => fileRef.current?.click()}>
+          <button
+            type="button"
+            className="inline-flex items-center justify-center gap-2 rounded-lg border border-black/15 bg-white px-4 py-2 text-sm font-medium text-refresh-bg transition hover:bg-black/[0.04] disabled:opacity-50"
+            disabled={scanning}
+            onClick={() => fileRef.current?.click()}
+          >
             <ImagePlus className="h-4 w-4" /> {t.addImage}
           </button>
-          <button type="button" className="btn-ghost" disabled={scanning} onClick={() => cameraRef.current?.click()}>
+          <button
+            type="button"
+            className="inline-flex items-center justify-center gap-2 rounded-lg border border-black/15 bg-white px-4 py-2 text-sm font-medium text-refresh-bg transition hover:bg-black/[0.04] disabled:opacity-50"
+            disabled={scanning}
+            onClick={() => cameraRef.current?.click()}
+          >
             <Camera className="h-4 w-4" /> {t.takePhoto}
           </button>
         </div>
         {scanning && (
-          <p className="mt-2 text-xs text-refresh-muted">{t.scanning} {scanProgress}%</p>
+          <p className="mt-2 text-xs text-refresh-bg/60">{t.scanning} {scanProgress}%</p>
         )}
-        {scanMsg && <p className="mt-2 text-xs font-medium text-refresh-sage">{scanMsg}</p>}
+        {scanMsg && <p className="mt-2 text-xs font-medium text-refresh-bg">{scanMsg}</p>}
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
