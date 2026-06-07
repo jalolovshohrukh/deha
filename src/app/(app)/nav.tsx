@@ -78,9 +78,9 @@ export default function Nav({ name, role }: { name: string; role: string }) {
         </div>
       </header>
 
-      {/* Mobile bottom nav */}
-      <nav className="fixed inset-x-0 bottom-0 z-20 border-t border-refresh-line bg-refresh-surface pb-[env(safe-area-inset-bottom)] md:hidden">
-        <div className="mx-auto flex max-w-5xl justify-around">
+      {/* Mobile bottom nav — floats above the bottom edge so it isn't flush */}
+      <nav className="refresh-shadow-soft fixed inset-x-3 bottom-[calc(1.25rem+env(safe-area-inset-bottom))] z-20 rounded-2xl border border-refresh-line bg-refresh-surface md:hidden">
+        <div className="flex justify-around">
           {items.map((it) => (
             <Link
               key={it.href}
