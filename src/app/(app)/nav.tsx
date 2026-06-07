@@ -24,7 +24,7 @@ export default function Nav({ name, role }: { name: string; role: string }) {
   // tab and animate a single capsule between positions. The nav stays mounted
   // across route changes (it lives in the layout), so this glides smoothly.
   const barRef = useRef<HTMLDivElement>(null);
-  const itemRefs = useRef<Array<HTMLSpanElement | null>>([]);
+  const itemRefs = useRef<Array<HTMLAnchorElement | null>>([]);
   const activeIndex = items.findIndex((it) => isActive(it.href));
   const [pill, setPill] = useState<{ left: number; top: number; width: number; height: number } | null>(null);
   const [glided, setGlided] = useState(false);
@@ -123,7 +123,7 @@ export default function Nav({ name, role }: { name: string; role: string }) {
           {pill && (
             <span
               aria-hidden
-              className={`pointer-events-none absolute z-0 rounded-2xl bg-white/10 ring-1 ring-inset ring-white/10 ${
+              className={`pointer-events-none absolute z-0 rounded-full bg-white/10 ring-1 ring-inset ring-white/10 ${
                 glided ? "transition-all duration-300 ease-out" : ""
               }`}
               style={{ left: pill.left, top: pill.top, width: pill.width, height: pill.height }}
@@ -136,19 +136,13 @@ export default function Nav({ name, role }: { name: string; role: string }) {
                 key={it.href}
                 href={it.href}
                 aria-current={active ? "page" : undefined}
-                className="relative z-10 flex flex-1 justify-center"
+                ref={(el) => {
+                  itemRefs.current[i] = el;
+                }}
+                className="relative z-10 flex flex-1 flex-col items-center gap-0.5 px-2 py-2 text-[10px] font-medium transition-colors duration-200"
               >
-                <span
-                  ref={(el) => {
-                    itemRefs.current[i] = el;
-                  }}
-                  className={`flex flex-col items-center gap-0.5 px-2 py-1.5 text-[10px] font-medium transition-colors duration-200 ${
-                    active ? "text-refresh-text" : "text-refresh-muted"
-                  }`}
-                >
-                  <it.Icon className="h-5 w-5" />
-                  {it.label}
-                </span>
+                <it.Icon className={`h-5 w-5 ${active ? "text-refresh-text" : "text-refresh-muted"}`} />
+                <span className={active ? "text-refresh-text" : "text-refresh-muted"}>{it.label}</span>
               </Link>
             );
           })}
