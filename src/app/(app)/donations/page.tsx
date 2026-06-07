@@ -3,23 +3,32 @@ import { prisma } from "@/lib/db";
 import { getSession } from "@/lib/auth";
 import { somoni, fmtDate, toInputDate } from "@/lib/money";
 import { t } from "@/lib/i18n";
+import { resolveRange, dateWhere } from "@/lib/range";
 import { DonationsView } from "./donations-view";
+import { DateRangeBar } from "../date-range-bar";
 import { DeleteButton } from "../delete-button";
 import { ExportButtons } from "../export-buttons";
 import { deleteDonation } from "./actions";
 
-export default async function DonationsPage() {
+export default async function DonationsPage({
+  searchParams,
+}: {
+  searchParams: { range?: string; from?: string; to?: string };
+}) {
   const user = await getSession();
   const isAdmin = user?.role === "admin";
+  const range = resolveRange(searchParams);
+  const where = dateWhere(range);
 
   const [donations, accounts, agg] = await Promise.all([
     prisma.donation.findMany({
+      where,
       orderBy: { date: "desc" },
       take: 200,
       include: { donor: true, account: true },
     }),
     prisma.account.findMany({ orderBy: { createdAt: "asc" }, select: { id: true, name: true } }),
-    prisma.donation.aggregate({ _sum: { amount: true }, _count: true }),
+    prisma.donation.aggregate({ _sum: { amount: true }, _count: true, where }),
   ]);
 
   const donorName = (d: (typeof donations)[number]["donor"]) => {
@@ -53,6 +62,10 @@ export default async function DonationsPage() {
           <div className="text-xs text-refresh-muted">{t.total} ({agg._count})</div>
           <div className="text-xl font-bold text-refresh-sage">{somoni(agg._sum.amount ?? 0)}</div>
         </div>
+      </div>
+
+      <div className="mb-4">
+        <DateRangeBar />
       </div>
 
       {donations.length > 0 && (

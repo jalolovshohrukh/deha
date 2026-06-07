@@ -1,5 +1,6 @@
 import { prisma } from "./db";
 import { t } from "./i18n";
+import { dateFilter, type ResolvedRange } from "./range";
 
 export type AccountWithBalance = {
   id: string;
@@ -42,21 +43,35 @@ export async function getAccountsWithBalances(): Promise<AccountWithBalance[]> {
   }));
 }
 
-export async function getTotals() {
-  const [raised, spent, donorsCount, donationsCount, openingAgg] = await Promise.all([
-    prisma.donation.aggregate({ _sum: { amount: true } }),
-    prisma.expense.aggregate({ _sum: { amount: true } }),
-    // count only donors who actually have a donation (ignores orphans/anon inflation)
-    prisma.donor.count({ where: { donations: { some: {} } } }),
-    prisma.donation.count(),
-    prisma.account.aggregate({ _sum: { openingBalance: true } }),
-  ]);
+export async function getTotals(range?: ResolvedRange) {
+  // Raised/spent/donors are scoped to the selected period; the current balance
+  // is always all-time (it's a snapshot of money on hand, not a flow).
+  const df = range ? dateFilter(range) : undefined;
+  const donWhere = df ? { date: df } : {};
+  const expWhere = df ? { date: df } : {};
+  const donorWhere = df ? { donations: { some: { date: df } } } : { donations: { some: {} } };
+
+  const [raised, spent, donorsCount, donationsCount, openingAgg, allRaised, allSpent] =
+    await Promise.all([
+      prisma.donation.aggregate({ _sum: { amount: true }, where: donWhere }),
+      prisma.expense.aggregate({ _sum: { amount: true }, where: expWhere }),
+      // count only donors who actually have a donation in range (ignores anon inflation)
+      prisma.donor.count({ where: donorWhere }),
+      prisma.donation.count({ where: donWhere }),
+      prisma.account.aggregate({ _sum: { openingBalance: true } }),
+      // all-time sums for the balance; reuse the scoped query when no range is set
+      df ? prisma.donation.aggregate({ _sum: { amount: true } }) : null,
+      df ? prisma.expense.aggregate({ _sum: { amount: true } }) : null,
+    ]);
+
   const totalRaised = raised._sum.amount ?? 0;
   const totalSpent = spent._sum.amount ?? 0;
   const opening = openingAgg._sum.openingBalance ?? 0;
+  const allTimeRaised = df ? allRaised!._sum.amount ?? 0 : totalRaised;
+  const allTimeSpent = df ? allSpent!._sum.amount ?? 0 : totalSpent;
   // Global balance computed independently of per-account grouping (transfers net
   // to zero globally), so it stays correct even for donations with no account.
-  const balance = opening + totalRaised - totalSpent;
+  const balance = opening + allTimeRaised - allTimeSpent;
   return {
     totalRaised,
     totalSpent,
@@ -112,8 +127,10 @@ export async function syncReachedTargets() {
   return newly;
 }
 
-export async function getDashboardStats() {
+export async function getDashboardStats(range?: ResolvedRange) {
+  const df = range ? dateFilter(range) : undefined;
   const donations = await prisma.donation.findMany({
+    where: df ? { date: df } : {},
     include: { donor: true, account: true },
     orderBy: { date: "asc" },
   });
@@ -173,19 +190,30 @@ export async function getDashboardStats() {
     .sort((a, b) => b.value - a.value)
     .slice(0, 10);
 
-  // daily — contiguous last 30 calendar days (empty days shown as 0)
+  // daily — contiguous calendar days (empty days shown as 0). Window ends at the
+  // range's end (or today) and spans the range, capped at 31 bars so a wide range
+  // (e.g. year-to-date) shows its last 31 days here while the monthly chart covers
+  // the broader trend.
   const dayMap: Record<string, number> = {};
   for (const d of donations) {
     const key = new Date(d.date).toISOString().slice(0, 10);
     dayMap[key] = (dayMap[key] || 0) + d.amount;
   }
-  const todayUtc = new Date();
-  const daily: { day: string; value: number }[] = [];
-  for (let i = 29; i >= 0; i--) {
-    const dt = new Date(
-      Date.UTC(todayUtc.getUTCFullYear(), todayUtc.getUTCMonth(), todayUtc.getUTCDate() - i)
+  const DAY_MS = 86_400_000;
+  const endRef = range?.to ?? new Date();
+  const endUtc = Date.UTC(endRef.getUTCFullYear(), endRef.getUTCMonth(), endRef.getUTCDate());
+  let count = 30;
+  if (range?.from) {
+    const startUtc = Date.UTC(
+      range.from.getUTCFullYear(),
+      range.from.getUTCMonth(),
+      range.from.getUTCDate()
     );
-    const key = dt.toISOString().slice(0, 10);
+    count = Math.min(Math.max(Math.floor((endUtc - startUtc) / DAY_MS) + 1, 1), 31);
+  }
+  const daily: { day: string; value: number }[] = [];
+  for (let i = count - 1; i >= 0; i--) {
+    const key = new Date(endUtc - i * DAY_MS).toISOString().slice(0, 10);
     daily.push({ day: key.slice(5), value: dayMap[key] || 0 });
   }
 

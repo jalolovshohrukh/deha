@@ -1,22 +1,32 @@
 import { getTotals, getDashboardStats, getTargetsWithProgress } from "@/lib/calc";
 import { somoni, fmtDate } from "@/lib/money";
 import { t } from "@/lib/i18n";
+import { resolveRange } from "@/lib/range";
 import { HandCoins, Receipt, Wallet, Users } from "lucide-react";
 import { MetricTile } from "@/components/refresh/MetricTile";
 import { CurrentTargetCard } from "./targets/target-cards";
 import { DailyChart, MonthlyChart, AccountChart, AgeChart, FamilyChart } from "./charts-lazy";
+import { DateRangeBar } from "./date-range-bar";
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: { range?: string; from?: string; to?: string };
+}) {
   const today = fmtDate(new Date());
+  const range = resolveRange(searchParams);
   const [totals, stats, targets] = await Promise.all([
-    getTotals(),
-    getDashboardStats(),
+    getTotals(range),
+    getDashboardStats(range),
     getTargetsWithProgress(),
   ]);
 
   return (
     <div className="space-y-5">
-      <h1 className="text-2xl font-bold">{t.dashboard}</h1>
+      <div className="space-y-3">
+        <h1 className="text-2xl font-bold">{t.dashboard}</h1>
+        <DateRangeBar />
+      </div>
 
       {/* KPIs */}
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">

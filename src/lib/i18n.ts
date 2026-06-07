@@ -117,6 +117,17 @@ export const t = {
   shareImage: "Ҳамчун расм мубодила",
   download: "Боргирӣ",
 
+  // date range filter
+  rangeAll: "Ҳама",
+  rangeToday: "Имрӯз",
+  rangeYesterday: "Дирӯз",
+  range7d: "7 рӯз",
+  range30d: "30 рӯз",
+  rangeYtd: "Имсол",
+  rangeCustom: "Дилхоҳ",
+  apply: "Татбиқ",
+  period: "Давра",
+
   // dashboard
   totalRaised: "Ҷамъи хайрияҳо",
   totalSpent: "Ҷамъи хароҷот",

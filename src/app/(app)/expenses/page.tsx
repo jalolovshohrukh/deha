@@ -3,19 +3,27 @@ import { getSession } from "@/lib/auth";
 import { Receipt } from "lucide-react";
 import { somoni, fmtDate, toInputDate } from "@/lib/money";
 import { t } from "@/lib/i18n";
+import { resolveRange, dateWhere } from "@/lib/range";
 import { ExpenseForm } from "./expense-form";
+import { DateRangeBar } from "../date-range-bar";
 import { DeleteButton } from "../delete-button";
 import { ExportButtons } from "../export-buttons";
 import { deleteExpense } from "./actions";
 
-export default async function ExpensesPage() {
+export default async function ExpensesPage({
+  searchParams,
+}: {
+  searchParams: { range?: string; from?: string; to?: string };
+}) {
   const user = await getSession();
   const isAdmin = user?.role === "admin";
+  const range = resolveRange(searchParams);
+  const where = dateWhere(range);
 
   const [expenses, accounts, agg] = await Promise.all([
-    prisma.expense.findMany({ orderBy: { date: "desc" }, take: 200, include: { account: true } }),
+    prisma.expense.findMany({ where, orderBy: { date: "desc" }, take: 200, include: { account: true } }),
     prisma.account.findMany({ orderBy: { createdAt: "asc" }, select: { id: true, name: true } }),
-    prisma.expense.aggregate({ _sum: { amount: true }, _count: true }),
+    prisma.expense.aggregate({ _sum: { amount: true }, _count: true, where }),
   ]);
 
   const exportRows = expenses.map((e) => ({
@@ -43,6 +51,10 @@ export default async function ExpensesPage() {
           <div className="text-xs text-refresh-muted">{t.total} ({agg._count})</div>
           <div className="text-xl font-bold text-refresh-pink">{somoni(agg._sum.amount ?? 0)}</div>
         </div>
+      </div>
+
+      <div className="mb-4">
+        <DateRangeBar />
       </div>
 
       {expenses.length > 0 && (

@@ -404,3 +404,13 @@ input[type="time"] {
 .refresh-light .refresh-scroll::-webkit-scrollbar-corner {
   background: transparent;
 }
+
+/* ───────── Hidden scrollbar (e.g. the date-range chip bar) ─────────
+   Keeps horizontal scrolling on touch without showing a track. */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
