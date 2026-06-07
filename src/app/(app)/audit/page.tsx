@@ -12,7 +12,7 @@ const actionLabel: Record<string, string> = {
 };
 const entityLabel: Record<string, string> = {
   donation: "хайрия",
-  expense: "харољот",
+  expense: "хароҷот",
   account: "ҳисоб",
   transfer: "гузаронидан",
   target: "ҳадаф",

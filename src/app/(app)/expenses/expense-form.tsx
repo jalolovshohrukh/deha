@@ -9,11 +9,11 @@ import { Select } from "../ui/select";
 import { createExpense } from "./actions";
 
 const categories = [
-  "Маводҳо (Materials)",
-  "Корфармоӣ (Labor)",
-  "Нақлиёт (Transport)",
-  "Таҷҳизот (Equipment)",
-  "Дигар (Other)",
+  "Маводҳо",
+  "Музди кор",
+  "Нақлиёт",
+  "Таҷҳизот",
+  "Дигар",
 ];
 
 export function ExpenseForm({ accounts, today }: { accounts: { id: string; name: string }[]; today: string }) {

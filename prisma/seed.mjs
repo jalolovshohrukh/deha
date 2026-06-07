@@ -100,10 +100,10 @@ async function main() {
 
   // --- Expenses ---
   await prisma.expense.create({
-    data: { amount: 3500, date: daysAgo(10), category: "Маводҳо (Materials)", payee: "Сангреза ООО", accountId: alif.id },
+    data: { amount: 3500, date: daysAgo(10), category: "Маводҳо", payee: "Сангреза ООО", accountId: alif.id },
   });
   await prisma.expense.create({
-    data: { amount: 1200, date: daysAgo(5), category: "Нақлиёт (Transport)", payee: "Камаз", accountId: cash.id },
+    data: { amount: 1200, date: daysAgo(5), category: "Нақлиёт", payee: "Камаз", accountId: cash.id },
   });
 
   // --- A transfer ---

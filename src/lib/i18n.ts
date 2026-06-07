@@ -8,7 +8,7 @@ export const t = {
   dashboard: "Асосӣ",
   donations: "Хайрияҳо",
   accounts: "Ҳисобҳо",
-  expenses: "Харољотҳо",
+  expenses: "Хароҷотҳо",
   targets: "Ҳадафҳо",
   audit: "Таърих",
   logout: "Баромад",
@@ -84,12 +84,12 @@ export const t = {
   noDonations: "Хайрия нест.",
 
   // expenses
-  expense: "Харољот",
-  newExpense: "Харољоти нав",
-  category: "Категория",
+  expense: "Хароҷот",
+  newExpense: "Хароҷоти нав",
+  category: "Гурӯҳ",
   payee: "Гиранда",
   spentFrom: "Аз кадом ҳисоб",
-  noExpenses: "Харољот нест.",
+  noExpenses: "Хароҷот нест.",
 
   // targets
   target: "Ҳадаф",
@@ -106,7 +106,7 @@ export const t = {
 
   // dashboard
   totalRaised: "Ҷамъи хайрияҳо",
-  totalSpent: "Ҷамъи харољот",
+  totalSpent: "Ҷамъи хароҷот",
   currentBalance: "Бақияи умумӣ",
   donorsCount: "Шумораи саховатмандон",
   byAge: "Аз рӯи синну сол",
