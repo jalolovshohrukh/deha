@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Plus, List } from "lucide-react";
-import { Tabs } from "@/components/refresh/Tabs";
+import { SegmentedControl } from "@/components/refresh/SegmentedControl";
 import { t } from "@/lib/i18n";
 import { DonationForm } from "./donation-form";
 
@@ -28,7 +28,7 @@ export function DonationsView({
 
   return (
     <>
-      <Tabs<TabKey>
+      <SegmentedControl<TabKey>
         className="mb-4"
         value={tab}
         onChange={setTab}
