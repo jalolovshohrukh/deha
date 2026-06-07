@@ -114,7 +114,7 @@ export default function Nav({ name, role }: { name: string; role: string }) {
       </header>
 
       {/* Mobile bottom nav — Apple-style floating "liquid glass" pill */}
-      <nav className="fixed inset-x-3 bottom-[calc(0.9rem+env(safe-area-inset-bottom))] z-20 md:hidden">
+      <nav className="fixed inset-x-3 bottom-[calc(1.6rem+env(safe-area-inset-bottom))] z-20 md:hidden">
         <div
           ref={barRef}
           className="relative flex items-center rounded-full border border-white/10 bg-refresh-surface/60 p-1 shadow-[0_10px_30px_rgba(0,0,0,0.5)] backdrop-blur-2xl backdrop-saturate-150"
