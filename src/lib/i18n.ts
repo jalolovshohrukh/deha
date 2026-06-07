@@ -127,6 +127,13 @@ export const t = {
   rangeCustom: "Дилхоҳ",
   apply: "Татбиқ",
   period: "Давра",
+  thisWeek: "Ин ҳафта",
+  thisMonth: "Ин моҳ",
+  thisYear: "Ин сол",
+  previousMonth: "Моҳи қаблӣ",
+  nextMonth: "Моҳи оянда",
+  previousYear: "Соли қаблӣ",
+  nextYear: "Соли оянда",
 
   // dashboard
   totalRaised: "Ҷамъи хайрияҳо",
