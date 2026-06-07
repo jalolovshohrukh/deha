@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Plus, ArrowRightLeft } from "lucide-react";
 import { t } from "@/lib/i18n";
+import { NumberInput } from "../ui/number-input";
+import { Select } from "../ui/select";
 import { createAccount, createTransfer } from "./actions";
 
 export function AccountForms({
@@ -71,15 +73,19 @@ export function AccountForms({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="label">{t.accountType}</label>
-              <select name="type" className="input" defaultValue="bank">
-                <option value="bank">{t.bank}</option>
-                <option value="cash">{t.cash}</option>
-                <option value="wallet">{t.wallet}</option>
-              </select>
+              <Select
+                name="type"
+                defaultValue="bank"
+                options={[
+                  { value: "bank", label: t.bank },
+                  { value: "cash", label: t.cash },
+                  { value: "wallet", label: t.wallet },
+                ]}
+              />
             </div>
             <div>
               <label className="label">{t.openingBalance}</label>
-              <input name="openingBalance" type="number" step="0.01" className="input" defaultValue="0" />
+              <NumberInput name="openingBalance" defaultValue="0" />
             </div>
           </div>
           <div className="flex gap-2">
@@ -101,25 +107,25 @@ export function AccountForms({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="label">{t.fromAccount}</label>
-              <select name="fromAccountId" className="input" required>
-                {accounts.map((a) => (
-                  <option key={a.id} value={a.id}>{a.name}</option>
-                ))}
-              </select>
+              <Select
+                name="fromAccountId"
+                defaultValue={accounts[0]?.id}
+                options={accounts.map((a) => ({ value: a.id, label: a.name }))}
+              />
             </div>
             <div>
               <label className="label">{t.toAccount}</label>
-              <select name="toAccountId" className="input" required defaultValue={accounts[1]?.id}>
-                {accounts.map((a) => (
-                  <option key={a.id} value={a.id}>{a.name}</option>
-                ))}
-              </select>
+              <Select
+                name="toAccountId"
+                defaultValue={accounts[1]?.id}
+                options={accounts.map((a) => ({ value: a.id, label: a.name }))}
+              />
             </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
               <label className="label">{t.amount} *</label>
-              <input name="amount" type="number" step="0.01" min="0" className="input" required />
+              <NumberInput name="amount" required />
             </div>
             <div>
               <label className="label">{t.date} *</label>

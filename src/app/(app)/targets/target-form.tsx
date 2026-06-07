@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Plus } from "lucide-react";
 import { t } from "@/lib/i18n";
+import { NumberInput } from "../ui/number-input";
 import { createTarget } from "./actions";
 
 export function TargetForm() {
@@ -44,7 +45,7 @@ export function TargetForm() {
       </div>
       <div>
         <label className="label">{t.targetAmount} *</label>
-        <input name="amount" type="number" step="0.01" min="0" className="input" required />
+        <NumberInput name="amount" required />
         <p className="mt-1 text-xs text-gray-400">
           Ҷамъи умумии лозима (масалан 150000). Пешрафт нисбат ба ҷамъи ҳамаи хайрияҳо ҳисоб мешавад.
         </p>

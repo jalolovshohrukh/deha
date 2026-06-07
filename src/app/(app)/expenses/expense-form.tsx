@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Plus } from "lucide-react";
 import { t } from "@/lib/i18n";
+import { NumberInput } from "../ui/number-input";
+import { Select } from "../ui/select";
 import { createExpense } from "./actions";
 
 const categories = [
@@ -54,7 +56,7 @@ export function ExpenseForm({ accounts, today }: { accounts: { id: string; name:
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label className="label">{t.amount} *</label>
-          <input name="amount" type="number" step="0.01" min="0" className="input" required />
+          <NumberInput name="amount" required />
         </div>
         <div>
           <label className="label">{t.date} *</label>
@@ -64,19 +66,17 @@ export function ExpenseForm({ accounts, today }: { accounts: { id: string; name:
 
       <div>
         <label className="label">{t.spentFrom} * <span className="text-gray-400">({t.required})</span></label>
-        <select name="accountId" className="input" required defaultValue="">
-          <option value="" disabled>— {t.account} —</option>
-          {accounts.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}
-        </select>
+        <Select
+          name="accountId"
+          placeholder={`— ${t.account} —`}
+          options={accounts.map((a) => ({ value: a.id, label: a.name }))}
+        />
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label className="label">{t.category}</label>
-          <select name="category" className="input" defaultValue="">
-            <option value="">—</option>
-            {categories.map((c) => <option key={c} value={c}>{c}</option>)}
-          </select>
+          <Select name="category" options={categories.map((c) => ({ value: c, label: c }))} />
         </div>
         <div>
           <label className="label">{t.payee}</label>

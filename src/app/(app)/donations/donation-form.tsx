@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { Plus, X, Camera } from "lucide-react";
 import { t } from "@/lib/i18n";
 import { parseOcr } from "@/lib/ocr";
+import { NumberInput } from "../ui/number-input";
+import { Select } from "../ui/select";
 import { createDonation } from "./actions";
 
 type Acc = { id: string; name: string };
@@ -145,8 +147,7 @@ export function DonationForm({
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
           <label className="label">{t.amount} * <span className="text-gray-400">({t.required})</span></label>
-          <input name="amount" type="number" step="0.01" min="0" className="input"
-            value={amount} onChange={(e) => setAmount(e.target.value)} required />
+          <NumberInput name="amount" value={amount} onValueChange={setAmount} required />
         </div>
         <div>
           <label className="label">{t.date} * <span className="text-gray-400">({t.required})</span></label>
@@ -157,10 +158,12 @@ export function DonationForm({
 
       <div>
         <label className="label">{t.account}</label>
-        <select name="accountId" className="input" value={accountId} onChange={(e) => setAccountId(e.target.value)}>
-          <option value="">—</option>
-          {accounts.map((a) => <option key={a.id} value={a.id}>{a.name}</option>)}
-        </select>
+        <Select
+          name="accountId"
+          value={accountId}
+          onValueChange={setAccountId}
+          options={accounts.map((a) => ({ value: a.id, label: a.name }))}
+        />
         <p className="mt-1 text-xs text-gray-400">{t.accountIsMethodHint}</p>
       </div>
 
