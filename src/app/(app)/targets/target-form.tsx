@@ -46,11 +46,11 @@ export function TargetForm() {
       <div>
         <label className="label">{t.targetAmount} *</label>
         <NumberInput name="amount" required />
-        <p className="mt-1 text-xs text-gray-400">
+        <p className="mt-1 text-xs text-refresh-muted-2">
           Ҷамъи умумии лозима (масалан 150000). Пешрафт нисбат ба ҷамъи ҳамаи хайрияҳо ҳисоб мешавад.
         </p>
       </div>
-      {error && <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">{error}</p>}
+      {error && <p className="rounded-lg bg-refresh-pink/10 px-3 py-2 text-sm text-refresh-pink">{error}</p>}
       <div className="flex gap-2">
         <button className="btn-primary" disabled={busy}>{t.save}</button>
         <button type="button" className="btn-ghost" onClick={() => setOpen(false)}>{t.cancel}</button>

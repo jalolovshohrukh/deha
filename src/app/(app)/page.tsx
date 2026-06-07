@@ -3,17 +3,10 @@ import { getTotals, getDashboardStats, getTargetsWithProgress } from "@/lib/calc
 import { prisma } from "@/lib/db";
 import { somoni, fmtDate } from "@/lib/money";
 import { t } from "@/lib/i18n";
+import { MetricTile } from "@/components/refresh/MetricTile";
+import { Icon } from "@/components/refresh/Icon";
 import { CurrentTargetCard } from "./targets/target-cards";
 import { DailyChart, MonthlyChart, AccountChart, AgeChart, FamilyChart } from "./charts";
-
-function Kpi({ label, value, accent }: { label: string; value: string; accent?: string }) {
-  return (
-    <div className="card">
-      <div className="text-xs text-gray-500">{label}</div>
-      <div className={`mt-1 text-xl font-bold ${accent ?? "text-gray-900"}`}>{value}</div>
-    </div>
-  );
-}
 
 export default async function DashboardPage() {
   const today = fmtDate(new Date());
@@ -50,13 +43,11 @@ export default async function DashboardPage() {
 
       {/* KPIs */}
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <Kpi label={t.totalRaised} value={somoni(totals.totalRaised)} accent="text-brand-600" />
-        <Kpi label={t.totalSpent} value={somoni(totals.totalSpent)} accent="text-red-600" />
-        <Kpi label={t.currentBalance} value={somoni(totals.balance)} accent="text-gray-900" />
-        <Kpi label={t.donorsCount} value={String(totals.donorsCount)} />
-      </div>
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <Kpi label={t.avgDonation} value={somoni(totals.avgDonation)} />
+        <MetricTile tone="sage" label={t.totalRaised} value={somoni(totals.totalRaised)} icon={<Icon name="hand-coins" size={20} />} />
+        <MetricTile tone="pink" label={t.totalSpent} value={somoni(totals.totalSpent)} icon={<Icon name="receipt" size={20} />} />
+        <MetricTile tone="blue" label={t.currentBalance} value={somoni(totals.balance)} icon={<Icon name="wallet" size={20} />} />
+        <MetricTile tone="periwinkle" label={t.donorsCount} value={String(totals.donorsCount)} icon={<Icon name="users" size={20} />} />
+        <MetricTile tone="lavender" label={t.avgDonation} value={somoni(totals.avgDonation)} icon={<Icon name="trending-up" size={20} />} />
       </div>
 
       {/* Current target */}
@@ -74,18 +65,18 @@ export default async function DashboardPage() {
         <div className="card">
           <h3 className="mb-3 font-semibold">{t.topDonors}</h3>
           {stats.topDonors.length === 0 ? (
-            <p className="text-sm text-gray-500">—</p>
+            <p className="text-sm text-refresh-muted">—</p>
           ) : (
             <ol className="space-y-2">
               {stats.topDonors.map((d, i) => (
                 <li key={i} className="flex items-center justify-between text-sm">
                   <span className="flex items-center gap-2">
-                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-brand-50 text-xs font-bold text-brand-700">
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-refresh-surface-3 text-xs font-bold text-refresh-sage">
                       {i + 1}
                     </span>
                     {d.name}
                   </span>
-                  <span className="font-semibold text-brand-600">{somoni(d.value)}</span>
+                  <span className="font-semibold text-refresh-sage">{somoni(d.value)}</span>
                 </li>
               ))}
             </ol>
@@ -97,24 +88,24 @@ export default async function DashboardPage() {
       <div className="card">
         <h3 className="mb-3 font-semibold">{t.recentActivity}</h3>
         {activity.length === 0 ? (
-          <p className="text-sm text-gray-500">—</p>
+          <p className="text-sm text-refresh-muted">—</p>
         ) : (
-          <div className="divide-y divide-gray-100">
+          <div className="divide-y divide-refresh-line">
             {activity.map((a, i) => (
               <div key={i} className="flex items-center justify-between py-2 text-sm">
                 <span className="flex items-center gap-2">
                   {a.kind === "donation" ? (
-                    <HandCoins className="h-4 w-4 text-brand-600" />
+                    <HandCoins className="h-4 w-4 text-refresh-sage" />
                   ) : (
-                    <Receipt className="h-4 w-4 text-red-500" />
+                    <Receipt className="h-4 w-4 text-refresh-pink" />
                   )}
                   <span>{a.label}</span>
                 </span>
                 <span className="flex items-center gap-3">
-                  <span className={a.kind === "donation" ? "font-semibold text-brand-600" : "font-semibold text-red-600"}>
+                  <span className={a.kind === "donation" ? "font-semibold text-refresh-sage" : "font-semibold text-refresh-pink"}>
                     {a.kind === "donation" ? "+" : "−"}{somoni(a.amount)}
                   </span>
-                  <span className="text-xs text-gray-400">{fmtDate(a.date)}</span>
+                  <span className="text-xs text-refresh-muted-2">{fmtDate(a.date)}</span>
                 </span>
               </div>
             ))}

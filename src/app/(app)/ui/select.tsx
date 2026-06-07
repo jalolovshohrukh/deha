@@ -69,15 +69,15 @@ export function Select({
         aria-haspopup="listbox"
         aria-expanded={open}
       >
-        <span className={selected ? "" : "text-gray-400"}>
+        <span className={selected ? "" : "text-refresh-muted-2"}>
           {selected ? selected.label : placeholder}
         </span>
-        <ChevronDown className={`h-4 w-4 shrink-0 text-gray-400 transition ${open ? "rotate-180" : ""}`} />
+        <ChevronDown className={`h-4 w-4 shrink-0 text-refresh-muted-2 transition ${open ? "rotate-180" : ""}`} />
       </button>
 
       {open && (
         <ul
-          className="absolute z-30 mt-1 max-h-60 w-full overflow-auto rounded-lg border border-gray-200 bg-white py-1 shadow-lg"
+          className="absolute z-30 mt-1 max-h-60 w-full overflow-auto rounded-lg border border-refresh-line bg-refresh-surface py-1 shadow-lg"
           role="listbox"
         >
           {options.map((o) => (
@@ -85,8 +85,8 @@ export function Select({
               <button
                 type="button"
                 onClick={() => choose(o.value)}
-                className={`flex w-full items-center justify-between px-3 py-2 text-left text-sm hover:bg-brand-50 ${
-                  o.value === current ? "font-medium text-brand-700" : "text-gray-700"
+                className={`flex w-full items-center justify-between px-3 py-2 text-left text-sm hover:bg-refresh-surface-3 ${
+                  o.value === current ? "font-medium text-refresh-sage" : "text-refresh-text"
                 }`}
                 role="option"
                 aria-selected={o.value === current}

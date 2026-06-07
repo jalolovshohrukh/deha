@@ -116,15 +116,15 @@ export function DonationForm({
       {!embedded && (
         <div className="flex items-center justify-between">
           <h3 className="font-semibold">{t.newDonation}</h3>
-          <button type="button" className="text-gray-400 hover:text-gray-600" onClick={() => setOpen(false)} aria-label={t.close}>
+          <button type="button" className="text-refresh-muted-2 hover:text-refresh-text" onClick={() => setOpen(false)} aria-label={t.close}>
             <X className="h-4 w-4" />
           </button>
         </div>
       )}
 
       {/* OCR scan */}
-      <div className="rounded-xl border border-dashed border-brand-300 bg-brand-50 p-3">
-        <p className="mb-2 text-xs text-gray-600">{t.ocrHint}</p>
+      <div className="rounded-xl border border-dashed border-refresh-surface-3 bg-refresh-surface-3 p-3">
+        <p className="mb-2 text-xs text-refresh-muted">{t.ocrHint}</p>
         <input
           ref={fileRef}
           type="file"
@@ -141,16 +141,16 @@ export function DonationForm({
         >
           <Camera className="h-4 w-4" /> {scanning ? `${t.scanning} ${scanProgress}%` : t.scanImage}
         </button>
-        {scanMsg && <p className="mt-2 text-xs font-medium text-brand-700">{scanMsg}</p>}
+        {scanMsg && <p className="mt-2 text-xs font-medium text-refresh-sage">{scanMsg}</p>}
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div>
-          <label className="label">{t.amount} * <span className="text-gray-400">({t.required})</span></label>
+          <label className="label">{t.amount} * <span className="text-refresh-muted-2">({t.required})</span></label>
           <NumberInput name="amount" value={amount} onValueChange={setAmount} required />
         </div>
         <div>
-          <label className="label">{t.date} * <span className="text-gray-400">({t.required})</span></label>
+          <label className="label">{t.date} * <span className="text-refresh-muted-2">({t.required})</span></label>
           <input name="date" type="date" className="input"
             value={date} onChange={(e) => setDate(e.target.value)} required />
         </div>
@@ -164,7 +164,7 @@ export function DonationForm({
           onValueChange={setAccountId}
           options={accounts.map((a) => ({ value: a.id, label: a.name }))}
         />
-        <p className="mt-1 text-xs text-gray-400">{t.accountIsMethodHint}</p>
+        <p className="mt-1 text-xs text-refresh-muted-2">{t.accountIsMethodHint}</p>
       </div>
 
       <label className="flex items-center gap-2 text-sm">
@@ -194,7 +194,7 @@ export function DonationForm({
         <input name="note" className="input" value={note} onChange={(e) => setNote(e.target.value)} />
       </div>
 
-      {error && <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">{error}</p>}
+      {error && <p className="rounded-lg bg-refresh-pink/10 px-3 py-2 text-sm text-refresh-pink">{error}</p>}
 
       <div className="flex gap-2">
         <button className="btn-primary" disabled={busy || scanning}>{t.save}</button>

@@ -22,11 +22,11 @@ export default function Nav({ name, role }: { name: string; role: string }) {
   return (
     <>
       {/* Top bar */}
-      <header className="sticky top-0 z-20 border-b border-gray-200 bg-white/90 backdrop-blur">
+      <header className="sticky top-0 z-20 border-b border-refresh-line bg-refresh-bg/80 backdrop-blur">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
           <Link href="/" className="flex items-center gap-2">
-            <Route className="h-5 w-5 text-brand-600" />
-            <span className="font-bold">{t.appName}</span>
+            <Route className="h-5 w-5 text-refresh-sage" />
+            <span className="font-bold text-refresh-text">{t.appName}</span>
           </Link>
 
           {/* desktop nav */}
@@ -35,8 +35,10 @@ export default function Nav({ name, role }: { name: string; role: string }) {
               <Link
                 key={it.href}
                 href={it.href}
-                className={`rounded-lg px-3 py-1.5 text-sm font-medium ${
-                  isActive(it.href) ? "bg-brand-50 text-brand-700" : "text-gray-600 hover:bg-gray-100"
+                className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${
+                  isActive(it.href)
+                    ? "bg-refresh-surface text-refresh-text"
+                    : "text-refresh-muted hover:bg-refresh-surface hover:text-refresh-text"
                 }`}
               >
                 {it.label}
@@ -45,8 +47,10 @@ export default function Nav({ name, role }: { name: string; role: string }) {
             {role === "admin" && (
               <Link
                 href="/audit"
-                className={`rounded-lg px-3 py-1.5 text-sm font-medium ${
-                  isActive("/audit") ? "bg-brand-50 text-brand-700" : "text-gray-600 hover:bg-gray-100"
+                className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${
+                  isActive("/audit")
+                    ? "bg-refresh-surface text-refresh-text"
+                    : "text-refresh-muted hover:bg-refresh-surface hover:text-refresh-text"
                 }`}
               >
                 {t.audit}
@@ -55,12 +59,18 @@ export default function Nav({ name, role }: { name: string; role: string }) {
           </nav>
 
           <div className="flex items-center gap-2">
-            <span className="hidden text-sm text-gray-500 sm:inline">{name}</span>
-            <span className={`chip ${role === "admin" ? "bg-brand-100 text-brand-700" : "bg-gray-100 text-gray-600"}`}>
+            <span className="hidden text-sm text-refresh-muted sm:inline">{name}</span>
+            <span
+              className={`chip ${
+                role === "admin"
+                  ? "bg-refresh-sage text-refresh-on-pastel"
+                  : "bg-refresh-surface-2 text-refresh-muted"
+              }`}
+            >
               {role === "admin" ? t.roleAdmin : t.roleViewer}
             </span>
             <form action={logoutAction}>
-              <button className="btn-ghost px-2 py-1" title={t.logout} aria-label={t.logout}>
+              <button className="btn-ghost px-2 py-1.5" title={t.logout} aria-label={t.logout}>
                 <LogOut className="h-4 w-4" />
               </button>
             </form>
@@ -69,14 +79,14 @@ export default function Nav({ name, role }: { name: string; role: string }) {
       </header>
 
       {/* Mobile bottom nav */}
-      <nav className="fixed inset-x-0 bottom-0 z-20 border-t border-gray-200 bg-white md:hidden">
+      <nav className="fixed inset-x-0 bottom-0 z-20 border-t border-refresh-line bg-refresh-surface md:hidden">
         <div className="mx-auto flex max-w-5xl justify-around">
           {items.map((it) => (
             <Link
               key={it.href}
               href={it.href}
-              className={`flex flex-1 flex-col items-center gap-0.5 py-2 text-[11px] ${
-                isActive(it.href) ? "text-brand-600" : "text-gray-500"
+              className={`flex flex-1 flex-col items-center gap-0.5 py-2 text-[11px] transition ${
+                isActive(it.href) ? "text-refresh-text" : "text-refresh-muted"
               }`}
             >
               <it.Icon className="h-5 w-5" />

@@ -33,19 +33,19 @@ export default async function AuditPage() {
     <div>
       <h1 className="mb-4 text-2xl font-bold">{t.audit}</h1>
       {logs.length === 0 ? (
-        <p className="card text-gray-500">—</p>
+        <p className="card text-refresh-muted">—</p>
       ) : (
-        <div className="card divide-y divide-gray-100 p-0">
+        <div className="card divide-y divide-refresh-line p-0">
           {logs.map((l) => (
             <div key={l.id} className="flex items-center justify-between px-4 py-2.5 text-sm">
               <div>
                 <span className="font-medium">{l.user?.name ?? "—"}</span>{" "}
-                <span className="text-gray-600">
+                <span className="text-refresh-muted">
                   {actionLabel[l.action] ?? l.action} {entityLabel[l.entity] ?? l.entity}
                 </span>
-                {l.details && <span className="text-gray-400"> · {l.details}</span>}
+                {l.details && <span className="text-refresh-muted-2"> · {l.details}</span>}
               </div>
-              <span className="shrink-0 text-xs text-gray-400">
+              <span className="shrink-0 text-xs text-refresh-muted-2">
                 {new Date(l.createdAt).toLocaleString("ru-RU")}
               </span>
             </div>

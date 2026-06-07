@@ -38,7 +38,7 @@ export function DeleteButton({
     <button
       onClick={onClick}
       disabled={busy}
-      className="text-gray-300 hover:text-red-500"
+      className="text-refresh-muted-2 hover:text-refresh-pink"
       title={t.delete}
       aria-label={t.delete}
     >

@@ -21,9 +21,28 @@ import { Shareable } from "./share-image";
 
 type Point = { name?: string; value: number; day?: string; month?: string };
 
-const COLORS = ["#1f9d55", "#f59e0b", "#3b82f6", "#ef4444", "#8b5cf6", "#14b8a6", "#ec4899", "#84cc16"];
+// Refresh pastel accents
+const COLORS = ["#CFDDDB", "#E4CDED", "#C2DBE9", "#F1C8D0", "#C9CAEF"];
+const SAGE = "#CFDDDB";
+const GRID = "#1e2022"; // refresh-line
+const AXIS = "#989898"; // refresh-muted
+const AXIS_LINE = "#3a3d40"; // refresh-surface-3
 
 const fmt = (v: any) => somoni(Number(v));
+const tick = { fontSize: 11, fill: AXIS } as const;
+const axis = { stroke: AXIS_LINE } as const;
+const tooltipProps = {
+  formatter: fmt,
+  contentStyle: {
+    background: "#292C2D",
+    border: "1px solid #1e2022",
+    borderRadius: 10,
+    color: "#fff",
+  },
+  labelStyle: { color: "#fff" },
+  itemStyle: { color: SAGE },
+  cursor: { fill: "rgba(255,255,255,0.04)" },
+} as const;
 
 export function DailyChart({ data }: { data: { day: string; value: number }[] }) {
   return (
@@ -32,11 +51,11 @@ export function DailyChart({ data }: { data: { day: string; value: number }[] })
       <div style={{ width: "100%", height: 220 }}>
         <ResponsiveContainer>
           <LineChart data={data} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
-            <XAxis dataKey="day" tick={{ fontSize: 11 }} />
-            <YAxis tick={{ fontSize: 11 }} />
-            <Tooltip formatter={fmt} />
-            <Line type="monotone" dataKey="value" stroke="#1f9d55" strokeWidth={2} dot={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke={GRID} />
+            <XAxis dataKey="day" tick={tick} axisLine={axis} tickLine={axis} />
+            <YAxis tick={tick} axisLine={axis} tickLine={axis} />
+            <Tooltip {...tooltipProps} />
+            <Line type="monotone" dataKey="value" stroke={SAGE} strokeWidth={2} dot={false} />
           </LineChart>
         </ResponsiveContainer>
       </div>
@@ -51,11 +70,11 @@ export function MonthlyChart({ data }: { data: { month: string; value: number }[
       <div style={{ width: "100%", height: 220 }}>
         <ResponsiveContainer>
           <BarChart data={data} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
-            <XAxis dataKey="month" tick={{ fontSize: 11 }} />
-            <YAxis tick={{ fontSize: 11 }} />
-            <Tooltip formatter={fmt} />
-            <Bar dataKey="value" fill="#1f9d55" radius={[4, 4, 0, 0]} />
+            <CartesianGrid strokeDasharray="3 3" stroke={GRID} />
+            <XAxis dataKey="month" tick={tick} axisLine={axis} tickLine={axis} />
+            <YAxis tick={tick} axisLine={axis} tickLine={axis} />
+            <Tooltip {...tooltipProps} />
+            <Bar dataKey="value" fill={SAGE} radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -70,10 +89,17 @@ export function AccountChart({ data }: { data: Point[] }) {
       <div style={{ width: "100%", height: 220 }}>
         <ResponsiveContainer>
           <PieChart>
-            <Pie data={data} dataKey="value" nameKey="name" outerRadius={80} label={(e: any) => e.name}>
+            <Pie
+              data={data}
+              dataKey="value"
+              nameKey="name"
+              outerRadius={80}
+              label={(e: any) => e.name}
+              stroke="#111315"
+            >
               {data.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
             </Pie>
-            <Tooltip formatter={fmt} />
+            <Tooltip {...tooltipProps} />
           </PieChart>
         </ResponsiveContainer>
       </div>
@@ -86,17 +112,17 @@ export function AgeChart({ data, today }: { data: Point[]; today: string }) {
   return (
     <Shareable filename="omor-sin-sol">
       <div className="card">
-        <div className="mb-1 flex items-center gap-1 text-xs text-gray-400">
+        <div className="mb-1 flex items-center gap-1 text-xs text-refresh-muted-2">
           <Route className="h-3.5 w-3.5" /> {t.appName} · {today}
         </div>
         <h3 className="mb-3 font-semibold">{t.byAge}</h3>
         <div style={{ width: "100%", height: 220 }}>
           <ResponsiveContainer>
             <BarChart data={data} margin={{ top: 5, right: 10, left: -10, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
-              <XAxis dataKey="name" tick={{ fontSize: 11 }} />
-              <YAxis tick={{ fontSize: 11 }} />
-              <Tooltip formatter={fmt} />
+              <CartesianGrid strokeDasharray="3 3" stroke={GRID} />
+              <XAxis dataKey="name" tick={tick} axisLine={axis} tickLine={axis} />
+              <YAxis tick={tick} axisLine={axis} tickLine={axis} />
+              <Tooltip {...tooltipProps} />
               <Bar dataKey="value" radius={[4, 4, 0, 0]}>
                 {data.map((_, i) => <Cell key={i} fill={COLORS[i % COLORS.length]} />)}
               </Bar>
@@ -113,18 +139,18 @@ export function FamilyChart({ data, today }: { data: Point[]; today: string }) {
   return (
     <Shareable filename="omor-nasab">
       <div className="card">
-        <div className="mb-1 flex items-center gap-1 text-xs text-gray-400">
+        <div className="mb-1 flex items-center gap-1 text-xs text-refresh-muted-2">
           <Route className="h-3.5 w-3.5" /> {t.appName} · {today}
         </div>
         <h3 className="mb-3 font-semibold">{t.byFamily}</h3>
         <div style={{ width: "100%", height: Math.max(220, data.length * 32) }}>
           <ResponsiveContainer>
             <BarChart data={data} layout="vertical" margin={{ top: 5, right: 10, left: 30, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
-              <XAxis type="number" tick={{ fontSize: 11 }} />
-              <YAxis type="category" dataKey="name" tick={{ fontSize: 11 }} width={90} />
-              <Tooltip formatter={fmt} />
-              <Bar dataKey="value" fill="#1f9d55" radius={[0, 4, 4, 0]} />
+              <CartesianGrid strokeDasharray="3 3" stroke={GRID} />
+              <XAxis type="number" tick={tick} axisLine={axis} tickLine={axis} />
+              <YAxis type="category" dataKey="name" tick={tick} axisLine={axis} tickLine={axis} width={90} />
+              <Tooltip {...tooltipProps} />
+              <Bar dataKey="value" fill={SAGE} radius={[0, 4, 4, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>

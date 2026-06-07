@@ -38,7 +38,7 @@ export function ExpenseForm({ accounts, today }: { accounts: { id: string; name:
   }
 
   if (accounts.length === 0) {
-    return <p className="card mb-4 text-sm text-gray-500">{t.noAccounts}</p>;
+    return <p className="card mb-4 text-sm text-refresh-muted">{t.noAccounts}</p>;
   }
 
   if (!open) {
@@ -65,7 +65,7 @@ export function ExpenseForm({ accounts, today }: { accounts: { id: string; name:
       </div>
 
       <div>
-        <label className="label">{t.spentFrom} * <span className="text-gray-400">({t.required})</span></label>
+        <label className="label">{t.spentFrom} * <span className="text-refresh-muted-2">({t.required})</span></label>
         <Select
           name="accountId"
           placeholder={`— ${t.account} —`}
@@ -89,7 +89,7 @@ export function ExpenseForm({ accounts, today }: { accounts: { id: string; name:
         <input name="note" className="input" />
       </div>
 
-      {error && <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">{error}</p>}
+      {error && <p className="rounded-lg bg-refresh-pink/10 px-3 py-2 text-sm text-refresh-pink">{error}</p>}
 
       <div className="flex gap-2">
         <button className="btn-primary" disabled={busy}>{t.save}</button>

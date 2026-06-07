@@ -40,8 +40,8 @@ export default async function ExpensesPage() {
       <div className="mb-4 flex items-end justify-between">
         <h1 className="text-2xl font-bold">{t.expenses}</h1>
         <div className="text-right">
-          <div className="text-xs text-gray-500">{t.total} ({agg._count})</div>
-          <div className="text-xl font-bold text-red-600">{somoni(agg._sum.amount ?? 0)}</div>
+          <div className="text-xs text-refresh-muted">{t.total} ({agg._count})</div>
+          <div className="text-xl font-bold text-refresh-pink">{somoni(agg._sum.amount ?? 0)}</div>
         </div>
       </div>
 
@@ -61,23 +61,23 @@ export default async function ExpensesPage() {
       {isAdmin && <ExpenseForm accounts={accounts} today={toInputDate(new Date())} />}
 
       {expenses.length === 0 ? (
-        <p className="card text-gray-500">{t.noExpenses}</p>
+        <p className="card text-refresh-muted">{t.noExpenses}</p>
       ) : (
-        <div className="card divide-y divide-gray-100 p-0">
+        <div className="card divide-y divide-refresh-line p-0">
           {expenses.map((e) => (
             <div key={e.id} className="flex items-center gap-3 px-4 py-3">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-red-50 text-red-500">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-refresh-pink/15 text-refresh-pink">
                 <Receipt className="h-4 w-4" />
               </div>
               <div className="min-w-0 flex-1">
                 <div className="truncate font-medium">{e.category || t.expense}</div>
-                <div className="flex flex-wrap items-center gap-2 text-xs text-gray-400">
+                <div className="flex flex-wrap items-center gap-2 text-xs text-refresh-muted-2">
                   <span>{fmtDate(e.date)}</span>
                   <span>· {e.account.name}</span>
                   {e.payee && <span>· {e.payee}</span>}
                 </div>
               </div>
-              <div className="text-right font-semibold text-red-600">−{somoni(e.amount)}</div>
+              <div className="text-right font-semibold text-refresh-pink">−{somoni(e.amount)}</div>
               {isAdmin && <DeleteButton id={e.id} action={deleteExpense} />}
             </div>
           ))}

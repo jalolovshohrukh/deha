@@ -34,15 +34,15 @@ export default async function AccountsPage() {
       <div className="mb-4 flex items-end justify-between">
         <h1 className="text-2xl font-bold">{t.accounts}</h1>
         <div className="text-right">
-          <div className="text-xs text-gray-500">{t.currentBalance}</div>
-          <div className="text-xl font-bold text-brand-600">{somoni(totalBalance)}</div>
+          <div className="text-xs text-refresh-muted">{t.currentBalance}</div>
+          <div className="text-xl font-bold text-refresh-sage">{somoni(totalBalance)}</div>
         </div>
       </div>
 
       {isAdmin && <AccountForms accounts={accounts} today={toInputDate(new Date())} />}
 
       {accounts.length === 0 ? (
-        <p className="card text-gray-500">{t.noAccounts}</p>
+        <p className="card text-refresh-muted">{t.noAccounts}</p>
       ) : (
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {accounts.map((a) => {
@@ -51,19 +51,19 @@ export default async function AccountsPage() {
             <Link
               key={a.id}
               href={`/accounts/${a.id}`}
-              className="card block transition hover:shadow-md hover:ring-brand-200"
+              className="card block transition hover:shadow-md hover:ring-refresh-surface-3"
             >
               <div className="flex items-center justify-between">
-                <span className="chip gap-1 bg-gray-100 text-gray-600">
+                <span className="chip gap-1 bg-refresh-surface-2 text-refresh-muted">
                   <TypeIcon className="h-3.5 w-3.5" /> {typeLabel[a.type] ?? a.type}
                 </span>
-                <ChevronRight className="h-4 w-4 text-gray-300" />
+                <ChevronRight className="h-4 w-4 text-refresh-muted-2" />
               </div>
               <div className="mt-2 text-base font-semibold">{a.name}</div>
-              <div className={`mt-1 text-2xl font-bold ${a.balance < 0 ? "text-red-600" : "text-brand-600"}`}>
+              <div className={`mt-1 text-2xl font-bold ${a.balance < 0 ? "text-refresh-pink" : "text-refresh-sage"}`}>
                 {somoni(a.balance)}
               </div>
-              <div className="mt-1 text-xs text-gray-400">
+              <div className="mt-1 text-xs text-refresh-muted-2">
                 {t.openingBalance}: {somoni(a.openingBalance)}
               </div>
             </Link>
@@ -74,22 +74,22 @@ export default async function AccountsPage() {
 
       <h2 className="mb-2 mt-6 text-lg font-semibold">{t.transfer}</h2>
       {transfers.length === 0 ? (
-        <p className="text-sm text-gray-500">—</p>
+        <p className="text-sm text-refresh-muted">—</p>
       ) : (
-        <div className="card divide-y divide-gray-100 p-0">
+        <div className="card divide-y divide-refresh-line p-0">
           {transfers.map((tr) => (
             <div key={tr.id} className="flex items-center justify-between px-4 py-3 text-sm">
               <div>
                 <span className="inline-flex items-center gap-1.5">
                   <span className="font-medium">{tr.fromAccount.name}</span>
-                  <ArrowRight className="h-4 w-4 text-gray-400" />
+                  <ArrowRight className="h-4 w-4 text-refresh-muted-2" />
                   <span className="font-medium">{tr.toAccount.name}</span>
                 </span>
-                {tr.note && <div className="text-xs text-gray-400">{tr.note}</div>}
+                {tr.note && <div className="text-xs text-refresh-muted-2">{tr.note}</div>}
               </div>
               <div className="text-right">
                 <div className="font-semibold">{somoni(tr.amount)}</div>
-                <div className="text-xs text-gray-400">{fmtDate(tr.date)}</div>
+                <div className="text-xs text-refresh-muted-2">{fmtDate(tr.date)}</div>
               </div>
             </div>
           ))}

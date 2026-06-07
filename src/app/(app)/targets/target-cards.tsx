@@ -16,18 +16,18 @@ type Tg = {
   reachedAt: Date | string | null;
 };
 
-function Bar({ pct, reached }: { pct: number; reached: boolean }) {
+function Bar({ pct }: { pct: number; reached?: boolean }) {
   return (
-    <div className="h-3 w-full overflow-hidden rounded-full bg-gray-100">
+    <div className="h-3 w-full overflow-hidden rounded-full bg-refresh-surface-3">
       <div
-        className={`h-full rounded-full ${reached ? "bg-brand-500" : "bg-brand-400"}`}
-        style={{ width: `${Math.max(2, pct)}%`, background: reached ? "#198048" : "#1f9d55" }}
+        className="h-full rounded-full bg-refresh-sage"
+        style={{ width: `${Math.max(2, pct)}%` }}
       />
     </div>
   );
 }
 
-/** Big branded card for the current target — shareable as an image. */
+/** Big branded pastel card for the current target — shareable as an image. */
 export function CurrentTargetCard({
   current,
   totalRaised,
@@ -39,19 +39,19 @@ export function CurrentTargetCard({
 }) {
   if (!current) {
     return (
-      <div className="card bg-brand-50 text-center">
-        <p className="flex items-center justify-center gap-2 text-lg font-semibold text-brand-700">
+      <div className="card text-center">
+        <p className="flex items-center justify-center gap-2 text-lg font-semibold text-refresh-sage">
           <PartyPopper className="h-5 w-5" /> Ҳамаи ҳадафҳо иҷро шуданд!
         </p>
-        <p className="text-sm text-gray-500">Ҳадафи нав илова кунед.</p>
+        <p className="text-sm text-refresh-muted">Ҳадафи нав илова кунед.</p>
       </div>
     );
   }
   return (
     <Shareable filename="hadaf">
       <div
-        className="rounded-2xl p-6 text-white"
-        style={{ background: "linear-gradient(135deg,#136639,#178a48)" }}
+        className="rounded-2xl p-6 text-refresh-on-pastel"
+        style={{ background: "linear-gradient(135deg,#CFDDDB,#C2DBE9)" }}
       >
         <div className="mb-1 flex items-center gap-1.5 text-sm font-medium">
           <Route className="h-4 w-4" /> {t.appName} · {t.currentTarget}
@@ -59,14 +59,17 @@ export function CurrentTargetCard({
         <div className="text-xl font-bold">{current.title}</div>
 
         <div className="mt-4 text-3xl font-extrabold">{somoni(totalRaised)}</div>
-        <div className="text-sm font-medium">аз {somoni(current.amount)}</div>
+        <div className="text-sm font-medium opacity-80">аз {somoni(current.amount)}</div>
 
-        <div className="mt-3 h-3 w-full overflow-hidden rounded-full bg-white/30">
-          <div className="h-full rounded-full bg-white" style={{ width: `${Math.max(2, current.pct)}%` }} />
+        <div className="mt-3 h-3 w-full overflow-hidden rounded-full bg-refresh-on-pastel/15">
+          <div
+            className="h-full rounded-full bg-refresh-on-pastel"
+            style={{ width: `${Math.max(2, current.pct)}%` }}
+          />
         </div>
-        <div className="mt-2 flex items-center justify-between text-sm">
-          <span className="font-semibold">{current.pct.toFixed(0)}%</span>
-          <span className="font-medium">{today}</span>
+        <div className="mt-2 flex items-center justify-between text-sm font-medium">
+          <span className="font-bold">{current.pct.toFixed(0)}%</span>
+          <span className="opacity-80">{today}</span>
         </div>
       </div>
     </Shareable>
@@ -89,7 +92,7 @@ export function TargetList({ list, isAdmin }: { list: Tg[]; isAdmin: boolean }) 
     }
   }
 
-  if (list.length === 0) return <p className="card text-gray-500">{t.noTargets}</p>;
+  if (list.length === 0) return <p className="card text-refresh-muted">{t.noTargets}</p>;
 
   return (
     <div className="space-y-3">
@@ -99,16 +102,16 @@ export function TargetList({ list, isAdmin }: { list: Tg[]; isAdmin: boolean }) 
             <div className="font-medium">{tg.title}</div>
             <div className="flex items-center gap-2">
               {tg.isReached ? (
-                <span className="chip gap-1 bg-brand-100 text-brand-700">
+                <span className="chip gap-1 bg-refresh-sage text-refresh-on-pastel">
                   <Check className="h-3.5 w-3.5" /> {t.reached}
                 </span>
               ) : (
-                <span className="chip bg-amber-100 text-amber-700">{t.active}</span>
+                <span className="chip bg-refresh-blue text-refresh-on-pastel">{t.active}</span>
               )}
               {isAdmin && (
                 <button
                   onClick={() => onDelete(tg.id)}
-                  className="text-gray-300 hover:text-red-500"
+                  className="text-refresh-muted-2 hover:text-refresh-pink"
                   title={t.delete}
                   aria-label={t.delete}
                 >
@@ -118,12 +121,12 @@ export function TargetList({ list, isAdmin }: { list: Tg[]; isAdmin: boolean }) 
             </div>
           </div>
           <div className="mt-2"><Bar pct={tg.pct} reached={tg.isReached} /></div>
-          <div className="mt-1 flex justify-between text-xs text-gray-500">
+          <div className="mt-1 flex justify-between text-xs text-refresh-muted">
             <span>{tg.pct.toFixed(0)}%</span>
             <span>{somoni(tg.amount)}</span>
           </div>
           {tg.isReached && tg.reachedAt && (
-            <div className="mt-1 text-xs text-brand-600">{t.reachedOn}: {fmtDate(tg.reachedAt)}</div>
+            <div className="mt-1 text-xs text-refresh-sage">{t.reachedOn}: {fmtDate(tg.reachedAt)}</div>
           )}
         </div>
       ))}

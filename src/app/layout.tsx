@@ -1,6 +1,13 @@
 import type { Metadata, Viewport } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { t } from "@/lib/i18n";
+
+const inter = Inter({
+  subsets: ["latin", "cyrillic"],
+  variable: "--font-inter",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: t.appName,
@@ -10,13 +17,13 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#1f9d55",
+  themeColor: "#111315",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="tg">
-      <body>{children}</body>
+    <html lang="tg" className={inter.variable}>
+      <body className="refresh font-sans antialiased">{children}</body>
     </html>
   );
 }

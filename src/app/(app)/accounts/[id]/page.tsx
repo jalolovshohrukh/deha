@@ -99,32 +99,32 @@ export default async function AccountDetailPage({ params }: { params: { id: stri
   ];
 
   const kindMeta: Record<Entry["kind"], { icon: LucideIcon; cls: string }> = {
-    donation: { icon: HandCoins, cls: "bg-brand-50 text-brand-600" },
-    in: { icon: ArrowDownLeft, cls: "bg-brand-50 text-brand-600" },
-    expense: { icon: Receipt, cls: "bg-red-50 text-red-500" },
-    out: { icon: ArrowUpRight, cls: "bg-red-50 text-red-500" },
+    donation: { icon: HandCoins, cls: "bg-refresh-surface-3 text-refresh-sage" },
+    in: { icon: ArrowDownLeft, cls: "bg-refresh-surface-3 text-refresh-sage" },
+    expense: { icon: Receipt, cls: "bg-refresh-pink/15 text-refresh-pink" },
+    out: { icon: ArrowUpRight, cls: "bg-refresh-pink/15 text-refresh-pink" },
   };
 
   return (
     <div>
-      <Link href="/accounts" className="mb-3 inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-800">
+      <Link href="/accounts" className="mb-3 inline-flex items-center gap-1 text-sm text-refresh-muted hover:text-refresh-text">
         <ArrowLeft className="h-4 w-4" /> {t.back}
       </Link>
 
       <div className="card mb-4">
         <div className="flex items-start justify-between">
           <div>
-            <span className="chip gap-1 bg-gray-100 text-gray-600">
+            <span className="chip gap-1 bg-refresh-surface-2 text-refresh-muted">
               <Icon className="h-3.5 w-3.5" /> {typeLabel[account.type] ?? account.type}
             </span>
             <h1 className="mt-2 text-2xl font-bold">{account.name}</h1>
-            <div className="mt-1 text-xs text-gray-400">
+            <div className="mt-1 text-xs text-refresh-muted-2">
               {t.openingLabel}: {somoni(account.openingBalance)}
             </div>
           </div>
           <div className="text-right">
-            <div className="text-xs text-gray-500">{t.balance}</div>
-            <div className={`text-2xl font-bold ${currentBalance < 0 ? "text-red-600" : "text-brand-600"}`}>
+            <div className="text-xs text-refresh-muted">{t.balance}</div>
+            <div className={`text-2xl font-bold ${currentBalance < 0 ? "text-refresh-pink" : "text-refresh-sage"}`}>
               {somoni(currentBalance)}
             </div>
           </div>
@@ -145,9 +145,9 @@ export default async function AccountDetailPage({ params }: { params: { id: stri
       </div>
 
       {display.length === 0 ? (
-        <p className="card text-gray-500">{t.noMovements}</p>
+        <p className="card text-refresh-muted">{t.noMovements}</p>
       ) : (
-        <div className="card divide-y divide-gray-100 p-0">
+        <div className="card divide-y divide-refresh-line p-0">
           {display.map((e, i) => {
             const m = kindMeta[e.kind];
             const MIcon = m.icon;
@@ -159,19 +159,19 @@ export default async function AccountDetailPage({ params }: { params: { id: stri
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="truncate font-medium">{e.label}</div>
-                  <div className="text-xs text-gray-400">{fmtDate(e.date)}</div>
+                  <div className="text-xs text-refresh-muted-2">{fmtDate(e.date)}</div>
                 </div>
                 <div className="text-right">
-                  <div className={`font-semibold ${positive ? "text-brand-600" : "text-red-600"}`}>
+                  <div className={`font-semibold ${positive ? "text-refresh-sage" : "text-refresh-pink"}`}>
                     {positive ? "+" : "−"}{somoni(Math.abs(e.delta))}
                   </div>
-                  <div className="text-xs text-gray-400">{somoni(e.balance)}</div>
+                  <div className="text-xs text-refresh-muted-2">{somoni(e.balance)}</div>
                 </div>
               </div>
             );
           })}
           {/* opening balance baseline */}
-          <div className="flex items-center justify-between px-4 py-3 text-sm text-gray-400">
+          <div className="flex items-center justify-between px-4 py-3 text-sm text-refresh-muted-2">
             <span>{t.openingLabel}</span>
             <span>{somoni(account.openingBalance)}</span>
           </div>

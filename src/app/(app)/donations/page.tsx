@@ -50,8 +50,8 @@ export default async function DonationsPage() {
       <div className="mb-4 flex items-end justify-between">
         <h1 className="text-2xl font-bold">{t.donations}</h1>
         <div className="text-right">
-          <div className="text-xs text-gray-500">{t.total} ({agg._count})</div>
-          <div className="text-xl font-bold text-brand-600">{somoni(agg._sum.amount ?? 0)}</div>
+          <div className="text-xs text-refresh-muted">{t.total} ({agg._count})</div>
+          <div className="text-xl font-bold text-refresh-sage">{somoni(agg._sum.amount ?? 0)}</div>
         </div>
       </div>
 
@@ -74,29 +74,29 @@ export default async function DonationsPage() {
         isAdmin={isAdmin}
         history={
           donations.length === 0 ? (
-            <p className="card text-gray-500">{t.noDonations}</p>
+            <p className="card text-refresh-muted">{t.noDonations}</p>
           ) : (
-            <div className="card divide-y divide-gray-100 p-0">
+            <div className="card divide-y divide-refresh-line p-0">
               {donations.map((d) => (
                 <div key={d.id} className="flex items-center gap-3 px-4 py-3">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-50 text-brand-600">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-refresh-surface-3 text-refresh-sage">
                     {d.donor?.isAnonymous ? <EyeOff className="h-4 w-4" /> : <User className="h-4 w-4" />}
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
                       <span className="truncate font-medium">{donorName(d.donor)}</span>
                       {d.donor?.age != null && (
-                        <span className="text-xs text-gray-400">{d.donor.age}</span>
+                        <span className="text-xs text-refresh-muted-2">{d.donor.age}</span>
                       )}
                     </div>
-                    <div className="flex flex-wrap items-center gap-2 text-xs text-gray-400">
+                    <div className="flex flex-wrap items-center gap-2 text-xs text-refresh-muted-2">
                       <span>{fmtDate(d.date)}</span>
                       {d.account && (
-                        <span className="chip bg-gray-100 text-gray-600">{d.account.name}</span>
+                        <span className="chip bg-refresh-surface-2 text-refresh-muted">{d.account.name}</span>
                       )}
                     </div>
                   </div>
-                  <div className="text-right font-semibold text-brand-600">{somoni(d.amount)}</div>
+                  <div className="text-right font-semibold text-refresh-sage">{somoni(d.amount)}</div>
                   {isAdmin && <DeleteButton id={d.id} action={deleteDonation} />}
                 </div>
               ))}
