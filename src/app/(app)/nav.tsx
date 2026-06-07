@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useLayoutEffect, useRef, useState } from "react";
 import { LayoutDashboard, HandCoins, Landmark, Receipt, Target, Route, LogOut } from "lucide-react";
 import { t } from "@/lib/i18n";
 import { logoutAction } from "./logout-action";
@@ -18,6 +19,40 @@ export default function Nav({ name, role }: { name: string; role: string }) {
   const path = usePathname();
   const isActive = (href: string) =>
     href === "/" ? path === "/" : path.startsWith(href);
+
+  // Sliding "liquid glass" indicator for the mobile nav: measure the active
+  // tab and animate a single capsule between positions. The nav stays mounted
+  // across route changes (it lives in the layout), so this glides smoothly.
+  const barRef = useRef<HTMLDivElement>(null);
+  const itemRefs = useRef<Array<HTMLSpanElement | null>>([]);
+  const activeIndex = items.findIndex((it) => isActive(it.href));
+  const [pill, setPill] = useState<{ left: number; top: number; width: number; height: number } | null>(null);
+  const [glided, setGlided] = useState(false);
+
+  useLayoutEffect(() => {
+    function measure() {
+      const bar = barRef.current;
+      const el = itemRefs.current[activeIndex];
+      if (!bar || !el) {
+        setPill(null);
+        return;
+      }
+      const b = bar.getBoundingClientRect();
+      const r = el.getBoundingClientRect();
+      setPill({ left: r.left - b.left, top: r.top - b.top, width: r.width, height: r.height });
+    }
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [activeIndex, path]);
+
+  // Don't animate the first placement (avoid a fly-in from 0,0).
+  useLayoutEffect(() => {
+    if (pill && !glided) {
+      const id = requestAnimationFrame(() => setGlided(true));
+      return () => cancelAnimationFrame(id);
+    }
+  }, [pill, glided]);
 
   return (
     <>
@@ -80,21 +115,35 @@ export default function Nav({ name, role }: { name: string; role: string }) {
 
       {/* Mobile bottom nav — Apple-style floating "liquid glass" pill */}
       <nav className="fixed inset-x-3 bottom-[calc(0.9rem+env(safe-area-inset-bottom))] z-20 md:hidden">
-        <div className="flex items-center rounded-full border border-white/10 bg-refresh-surface/70 p-1 shadow-[0_10px_30px_rgba(0,0,0,0.5)] backdrop-blur-xl backdrop-saturate-150">
-          {items.map((it) => {
+        <div
+          ref={barRef}
+          className="relative flex items-center rounded-full border border-white/10 bg-refresh-surface/60 p-1 shadow-[0_10px_30px_rgba(0,0,0,0.5)] backdrop-blur-2xl backdrop-saturate-150"
+        >
+          {/* sliding glass capsule behind the active tab */}
+          {pill && (
+            <span
+              aria-hidden
+              className={`pointer-events-none absolute z-0 rounded-2xl bg-white/10 ring-1 ring-inset ring-white/10 ${
+                glided ? "transition-all duration-300 ease-out" : ""
+              }`}
+              style={{ left: pill.left, top: pill.top, width: pill.width, height: pill.height }}
+            />
+          )}
+          {items.map((it, i) => {
             const active = isActive(it.href);
             return (
               <Link
                 key={it.href}
                 href={it.href}
                 aria-current={active ? "page" : undefined}
-                className="flex flex-1 justify-center"
+                className="relative z-10 flex flex-1 justify-center"
               >
                 <span
-                  className={`flex flex-col items-center gap-0.5 rounded-2xl px-2 py-1.5 text-[10px] font-medium transition ${
-                    active
-                      ? "bg-white/10 text-refresh-text ring-1 ring-inset ring-white/10"
-                      : "text-refresh-muted"
+                  ref={(el) => {
+                    itemRefs.current[i] = el;
+                  }}
+                  className={`flex flex-col items-center gap-0.5 px-2 py-1.5 text-[10px] font-medium transition-colors duration-200 ${
+                    active ? "text-refresh-text" : "text-refresh-muted"
                   }`}
                 >
                   <it.Icon className="h-5 w-5" />
