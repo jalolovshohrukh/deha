@@ -48,6 +48,8 @@ export const t = {
   // users
   users: "Корбарон",
   newUser: "Корбари нав",
+  edit: "Таҳрир",
+  newPassword: "Рамзи нав",
   loginUsername: "Логин",
   displayName: "Ном",
   role: "Нақш",
