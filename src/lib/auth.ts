@@ -3,7 +3,11 @@ import { cookies } from "next/headers";
 import { SignJWT, jwtVerify } from "jose";
 import { prisma } from "./db";
 
-function getSecret(): Uint8Array {
+// Lazily resolved + memoized so merely importing this module (e.g. during
+// `next build`) does not require AUTH_SECRET — only an actual auth operation does.
+let _secret: Uint8Array | null = null;
+function secret(): Uint8Array {
+  if (_secret) return _secret;
   const raw = process.env.AUTH_SECRET;
   if (!raw || raw.length < 32) {
     if (process.env.NODE_ENV === "production") {
@@ -12,11 +16,12 @@ function getSecret(): Uint8Array {
       );
     }
     // Dev only: never used in production thanks to the guard above.
-    return new TextEncoder().encode((raw || "dev-secret-change-me").padEnd(32, "0"));
+    _secret = new TextEncoder().encode((raw || "dev-secret-change-me").padEnd(32, "0"));
+    return _secret;
   }
-  return new TextEncoder().encode(raw);
+  _secret = new TextEncoder().encode(raw);
+  return _secret;
 }
-const secret = getSecret();
 const COOKIE = "dehai_session";
 
 export type SessionUser = {
@@ -31,7 +36,7 @@ export async function createSession(user: SessionUser) {
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime("30d")
-    .sign(secret);
+    .sign(secret());
 
   cookies().set(COOKIE, token, {
     httpOnly: true,
@@ -50,7 +55,7 @@ export async function getSession(): Promise<SessionUser | null> {
   const token = cookies().get(COOKIE)?.value;
   if (!token) return null;
   try {
-    const { payload } = await jwtVerify(token, secret, { algorithms: ["HS256"] });
+    const { payload } = await jwtVerify(token, secret(), { algorithms: ["HS256"] });
     return {
       id: payload.id as string,
       username: payload.username as string,
