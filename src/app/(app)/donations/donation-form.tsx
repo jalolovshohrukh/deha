@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, X, Camera } from "lucide-react";
+import { Plus, X, Camera, ImagePlus } from "lucide-react";
 import { t } from "@/lib/i18n";
 import { parseOcr } from "@/lib/ocr";
 import { NumberInput } from "../ui/number-input";
@@ -27,6 +27,7 @@ export function DonationForm({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
+  const cameraRef = useRef<HTMLInputElement>(null);
 
   // OCR state
   const [scanning, setScanning] = useState(false);
@@ -123,24 +124,36 @@ export function DonationForm({
       )}
 
       {/* OCR scan */}
-      <div className="rounded-xl border border-dashed border-refresh-surface-3 bg-refresh-surface-3 p-3">
+      <div className="rounded-xl border border-dashed border-refresh-surface-3 bg-refresh-surface-2 p-3">
         <p className="mb-2 text-xs text-refresh-muted">{t.ocrHint}</p>
+        {/* gallery / files — no capture, so mobile shows the photo library */}
         <input
           ref={fileRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={(e) => { const f = e.target.files?.[0]; if (f) handleScan(f); e.target.value = ""; }}
+        />
+        {/* camera — capture opens the camera on mobile */}
+        <input
+          ref={cameraRef}
           type="file"
           accept="image/*"
           capture="environment"
           className="hidden"
           onChange={(e) => { const f = e.target.files?.[0]; if (f) handleScan(f); e.target.value = ""; }}
         />
-        <button
-          type="button"
-          className="btn-ghost"
-          disabled={scanning}
-          onClick={() => fileRef.current?.click()}
-        >
-          <Camera className="h-4 w-4" /> {scanning ? `${t.scanning} ${scanProgress}%` : t.scanImage}
-        </button>
+        <div className="flex flex-wrap gap-2">
+          <button type="button" className="btn-ghost" disabled={scanning} onClick={() => fileRef.current?.click()}>
+            <ImagePlus className="h-4 w-4" /> {t.addImage}
+          </button>
+          <button type="button" className="btn-ghost" disabled={scanning} onClick={() => cameraRef.current?.click()}>
+            <Camera className="h-4 w-4" /> {t.takePhoto}
+          </button>
+        </div>
+        {scanning && (
+          <p className="mt-2 text-xs text-refresh-muted">{t.scanning} {scanProgress}%</p>
+        )}
         {scanMsg && <p className="mt-2 text-xs font-medium text-refresh-sage">{scanMsg}</p>}
       </div>
 
