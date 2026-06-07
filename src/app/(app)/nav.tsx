@@ -79,17 +79,17 @@ export default function Nav({ name, role }: { name: string; role: string }) {
       </header>
 
       {/* Mobile bottom nav */}
-      <nav className="fixed inset-x-0 bottom-0 z-20 border-t border-refresh-line bg-refresh-surface md:hidden">
+      <nav className="fixed inset-x-0 bottom-0 z-20 border-t border-refresh-line bg-refresh-surface pb-[env(safe-area-inset-bottom)] md:hidden">
         <div className="mx-auto flex max-w-5xl justify-around">
           {items.map((it) => (
             <Link
               key={it.href}
               href={it.href}
-              className={`flex flex-1 flex-col items-center gap-0.5 py-2 text-[11px] transition ${
+              className={`flex flex-1 flex-col items-center gap-1 py-3 text-xs font-medium transition ${
                 isActive(it.href) ? "text-refresh-text" : "text-refresh-muted"
               }`}
             >
-              <it.Icon className="h-5 w-5" />
+              <it.Icon className="h-6 w-6" />
               {it.label}
             </Link>
           ))}
