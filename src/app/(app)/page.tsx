@@ -1,6 +1,4 @@
-import { HandCoins, Receipt } from "lucide-react";
 import { getTotals, getDashboardStats, getTargetsWithProgress } from "@/lib/calc";
-import { prisma } from "@/lib/db";
 import { somoni, fmtDate } from "@/lib/money";
 import { t } from "@/lib/i18n";
 import { MetricTile } from "@/components/refresh/MetricTile";
@@ -10,32 +8,11 @@ import { DailyChart, MonthlyChart, AccountChart, AgeChart, FamilyChart } from ".
 
 export default async function DashboardPage() {
   const today = fmtDate(new Date());
-  const [totals, stats, targets, recentDon, recentExp] = await Promise.all([
+  const [totals, stats, targets] = await Promise.all([
     getTotals(),
     getDashboardStats(),
     getTargetsWithProgress(),
-    prisma.donation.findMany({ orderBy: { createdAt: "desc" }, take: 6, include: { donor: true } }),
-    prisma.expense.findMany({ orderBy: { createdAt: "desc" }, take: 6, include: { account: true } }),
   ]);
-
-  const activity = [
-    ...recentDon.map((d) => ({
-      kind: "donation" as const,
-      label: d.donor?.isAnonymous
-        ? t.anonymous
-        : `${d.donor?.firstName ?? ""} ${d.donor?.familyName ?? ""}`.trim() || t.donation,
-      amount: d.amount,
-      date: d.createdAt,
-    })),
-    ...recentExp.map((e) => ({
-      kind: "expense" as const,
-      label: e.category || e.account.name,
-      amount: e.amount,
-      date: e.createdAt,
-    })),
-  ]
-    .sort((a, b) => +new Date(b.date) - +new Date(a.date))
-    .slice(0, 8);
 
   return (
     <div className="space-y-5">
@@ -81,35 +58,6 @@ export default async function DashboardPage() {
             </ol>
           )}
         </div>
-      </div>
-
-      {/* Recent activity */}
-      <div className="card">
-        <h3 className="mb-3 font-semibold">{t.recentActivity}</h3>
-        {activity.length === 0 ? (
-          <p className="text-sm text-refresh-muted">—</p>
-        ) : (
-          <div className="divide-y divide-refresh-line">
-            {activity.map((a, i) => (
-              <div key={i} className="flex items-center justify-between py-2 text-sm">
-                <span className="flex items-center gap-2">
-                  {a.kind === "donation" ? (
-                    <HandCoins className="h-4 w-4 text-refresh-sage" />
-                  ) : (
-                    <Receipt className="h-4 w-4 text-refresh-pink" />
-                  )}
-                  <span>{a.label}</span>
-                </span>
-                <span className="flex items-center gap-3">
-                  <span className={a.kind === "donation" ? "font-semibold text-refresh-sage" : "font-semibold text-refresh-pink"}>
-                    {a.kind === "donation" ? "+" : "−"}{somoni(a.amount)}
-                  </span>
-                  <span className="text-xs text-refresh-muted-2">{fmtDate(a.date)}</span>
-                </span>
-              </div>
-            ))}
-          </div>
-        )}
       </div>
     </div>
   );
