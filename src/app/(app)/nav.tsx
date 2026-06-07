@@ -78,21 +78,31 @@ export default function Nav({ name, role }: { name: string; role: string }) {
         </div>
       </header>
 
-      {/* Mobile bottom nav — floats above the bottom edge so it isn't flush */}
-      <nav className="refresh-shadow-soft fixed inset-x-3 bottom-[calc(1.25rem+env(safe-area-inset-bottom))] z-20 rounded-2xl border border-refresh-line bg-refresh-surface md:hidden">
-        <div className="flex justify-around">
-          {items.map((it) => (
-            <Link
-              key={it.href}
-              href={it.href}
-              className={`flex flex-1 flex-col items-center gap-1 py-3 text-xs font-medium transition ${
-                isActive(it.href) ? "text-refresh-text" : "text-refresh-muted"
-              }`}
-            >
-              <it.Icon className="h-6 w-6" />
-              {it.label}
-            </Link>
-          ))}
+      {/* Mobile bottom nav — Apple-style floating "liquid glass" pill */}
+      <nav className="fixed inset-x-3 bottom-[calc(0.9rem+env(safe-area-inset-bottom))] z-20 md:hidden">
+        <div className="flex items-center rounded-full border border-white/10 bg-refresh-surface/70 p-1 shadow-[0_10px_30px_rgba(0,0,0,0.5)] backdrop-blur-xl backdrop-saturate-150">
+          {items.map((it) => {
+            const active = isActive(it.href);
+            return (
+              <Link
+                key={it.href}
+                href={it.href}
+                aria-current={active ? "page" : undefined}
+                className="flex flex-1 justify-center"
+              >
+                <span
+                  className={`flex flex-col items-center gap-0.5 rounded-2xl px-2 py-1.5 text-[10px] font-medium transition ${
+                    active
+                      ? "bg-white/10 text-refresh-text ring-1 ring-inset ring-white/10"
+                      : "text-refresh-muted"
+                  }`}
+                >
+                  <it.Icon className="h-5 w-5" />
+                  {it.label}
+                </span>
+              </Link>
+            );
+          })}
         </div>
       </nav>
     </>
