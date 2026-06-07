@@ -1,5 +1,5 @@
 import { prisma } from "./db";
-import { ageGroup, t } from "./i18n";
+import { t } from "./i18n";
 
 export type AccountWithBalance = {
   id: string;
@@ -118,13 +118,22 @@ export async function getDashboardStats() {
     orderBy: { date: "asc" },
   });
 
-  // by age group
+  // by exact age (each age its own bar, ascending; unknown last)
   const ageMap: Record<string, number> = {};
   for (const d of donations) {
-    const g = ageGroup(d.donor?.age ?? null);
-    ageMap[g] = (ageMap[g] || 0) + d.amount;
+    const a = d.donor?.age;
+    const key = a == null ? t.unknown : String(a);
+    ageMap[key] = (ageMap[key] || 0) + d.amount;
   }
-  const byAge = Object.entries(ageMap).map(([name, value]) => ({ name, value }));
+  const byAge = Object.entries(ageMap)
+    .map(([name, value]) => ({ name, value }))
+    .sort((x, y) => {
+      const nx = parseInt(x.name, 10);
+      const ny = parseInt(y.name, 10);
+      if (Number.isNaN(nx)) return 1;
+      if (Number.isNaN(ny)) return -1;
+      return nx - ny;
+    });
 
   // by account (the account IS the payment method: Alif, DC, cash, ...)
   const accMap: Record<string, number> = {};
