@@ -48,6 +48,17 @@ body {
   color: rgb(255 255 255);
 }
 
+/* iOS Safari renders native date/time inputs wider than their box and ignores
+   the container width, causing horizontal overflow on mobile. Normalize them. */
+input[type="date"],
+input[type="datetime-local"],
+input[type="time"] {
+  -webkit-appearance: none;
+  appearance: none;
+  min-width: 0;
+  max-width: 100%;
+}
+
 /* Sidebar TOC scrollbar — thin, dark, only visible on hover/scroll */
 .refresh-toc {
   scrollbar-width: thin;
@@ -89,7 +100,7 @@ body {
     @apply rounded-xl bg-refresh-surface p-4 text-refresh-text;
   }
   .input {
-    @apply w-full rounded-lg border border-refresh-surface-3 bg-refresh-surface px-3 py-2.5 text-sm text-refresh-text outline-none transition placeholder:text-refresh-muted-2 focus:border-refresh-text focus:ring-2 focus:ring-refresh-text/20;
+    @apply w-full min-w-0 max-w-full rounded-lg border border-refresh-surface-3 bg-refresh-surface px-3 py-2.5 text-sm text-refresh-text outline-none transition placeholder:text-refresh-muted-2 focus:border-refresh-text focus:ring-2 focus:ring-refresh-text/20;
   }
   .label {
     @apply mb-1 block text-xs font-medium text-refresh-muted;
