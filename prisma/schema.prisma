@@ -3,8 +3,11 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  // Neon's Vercel integration also provides an unpooled (direct) URL, which
+  // Prisma uses for schema push/migrations. Falls back to DATABASE_URL locally.
+  directUrl = env("DATABASE_URL_UNPOOLED")
 }
 
 model User {

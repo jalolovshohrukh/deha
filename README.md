@@ -43,17 +43,33 @@ Open **http://localhost:3000** and log in:
 - `npm run db:seed` — re-seed (sample data is skipped if accounts already exist)
 - `npx prisma studio` — browse/edit the database in a GUI
 
+## Deploy to Vercel (Neon Postgres)
+
+1. Import the repo into Vercel.
+2. **Storage → Create Database → Neon** and connect it to the project. This adds
+   `DATABASE_URL` and `DATABASE_URL_UNPOOLED` to the project's env vars.
+3. Add an env var **`AUTH_SECRET`** (≥ 32 chars; `openssl rand -base64 48`).
+   Optionally `ADMIN_PASSWORD` / `VIEWER_PASSWORD` to set the login passwords.
+4. Deploy. The build runs `prisma db push` (creates tables in Neon) and
+   `prisma/seed-prod.mjs` (creates the `admin`/`viewer` logins) automatically.
+
+## Local development against Postgres
+
+The app uses **Postgres** (provider `postgresql`). Put your Neon connection
+strings into `.env` (`DATABASE_URL` = pooled, `DATABASE_URL_UNPOOLED` = direct),
+then `npm run setup` to create tables and seed sample data, and `npm run dev`.
+
 ## Notes
 
-- **OCR** runs in the browser and downloads its language model from a CDN the
-  first time it is used, so the first scan needs an internet connection (it is
-  cached afterward). It reads Latin text/digits well; amounts and dates from
-  payment screenshots work best. You always review before saving.
-- **Database** is a single file at `prisma/dev.db`. Back it up by copying that file.
-- To move to **Postgres/Supabase** later: change the `datasource` provider and
-  `DATABASE_URL`, then `npx prisma db push`. No feature code changes needed.
+- **OCR** runs in the browser (Russian+English) and downloads its language model
+  from a CDN the first time it is used, so the first scan needs internet (cached
+  afterward). You always review the parsed values before saving.
+- `npm run db:seed` loads **sample/demo** data (for local testing).
+  `prisma/seed-prod.mjs` (used by the deploy build) creates **only** the login
+  accounts — no demo data.
 
 ## Tech
 
-Next.js (App Router) · TypeScript · Tailwind CSS · Prisma + SQLite · Recharts ·
-Tesseract.js (OCR) · html-to-image (share cards) · jose + bcryptjs (auth).
+Next.js (App Router) · TypeScript · Tailwind CSS · Prisma + Postgres (Neon) ·
+Recharts · Tesseract.js (OCR) · write-excel-file + print (exports) ·
+html-to-image (share cards) · jose + bcryptjs (auth).
