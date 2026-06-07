@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { toPng } from "html-to-image";
 import { Share2, Download } from "lucide-react";
 import { t } from "@/lib/i18n";
 
@@ -22,6 +21,7 @@ export function Shareable({
 
   async function toBlob(): Promise<Blob | null> {
     if (!ref.current) return null;
+    const { toPng } = await import("html-to-image");
     const dataUrl = await toPng(ref.current, {
       pixelRatio: 2,
       backgroundColor: "#111315",

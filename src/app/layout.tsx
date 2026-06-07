@@ -4,7 +4,7 @@ import "./globals.css";
 import { t } from "@/lib/i18n";
 
 const inter = Inter({
-  subsets: ["latin", "cyrillic"],
+  subsets: ["latin", "cyrillic", "cyrillic-ext"],
   variable: "--font-inter",
   display: "swap",
 });

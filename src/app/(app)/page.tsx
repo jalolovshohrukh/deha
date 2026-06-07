@@ -1,10 +1,10 @@
 import { getTotals, getDashboardStats, getTargetsWithProgress } from "@/lib/calc";
 import { somoni, fmtDate } from "@/lib/money";
 import { t } from "@/lib/i18n";
+import { HandCoins, Receipt, Wallet, Users } from "lucide-react";
 import { MetricTile } from "@/components/refresh/MetricTile";
-import { Icon } from "@/components/refresh/Icon";
 import { CurrentTargetCard } from "./targets/target-cards";
-import { DailyChart, MonthlyChart, AccountChart, AgeChart, FamilyChart } from "./charts";
+import { DailyChart, MonthlyChart, AccountChart, AgeChart, FamilyChart } from "./charts-lazy";
 
 export default async function DashboardPage() {
   const today = fmtDate(new Date());
@@ -20,10 +20,10 @@ export default async function DashboardPage() {
 
       {/* KPIs */}
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <MetricTile tone="sage" label={t.totalRaised} value={somoni(totals.totalRaised)} icon={<Icon name="hand-coins" size={20} />} />
-        <MetricTile tone="pink" label={t.totalSpent} value={somoni(totals.totalSpent)} icon={<Icon name="receipt" size={20} />} />
-        <MetricTile tone="blue" label={t.currentBalance} value={somoni(totals.balance)} icon={<Icon name="wallet" size={20} />} />
-        <MetricTile tone="periwinkle" label={t.donorsCount} value={String(totals.donorsCount)} icon={<Icon name="users" size={20} />} />
+        <MetricTile tone="sage" label={t.totalRaised} value={somoni(totals.totalRaised)} icon={<HandCoins size={20} />} />
+        <MetricTile tone="pink" label={t.totalSpent} value={somoni(totals.totalSpent)} icon={<Receipt size={20} />} />
+        <MetricTile tone="blue" label={t.currentBalance} value={somoni(totals.balance)} icon={<Wallet size={20} />} />
+        <MetricTile tone="periwinkle" label={t.donorsCount} value={String(totals.donorsCount)} icon={<Users size={20} />} />
       </div>
 
       {/* Current target */}
