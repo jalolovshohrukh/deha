@@ -104,7 +104,12 @@ export default function Nav({ name, role }: { name: string; role: string }) {
             >
               {role === "admin" ? t.roleAdmin : t.roleViewer}
             </span>
-            <form action={logoutAction}>
+            <form
+              action={logoutAction}
+              onSubmit={(e) => {
+                if (!confirm(t.confirmLogout)) e.preventDefault();
+              }}
+            >
               <button className="btn-ghost px-2 py-1.5" title={t.logout} aria-label={t.logout}>
                 <LogOut className="h-4 w-4" />
               </button>

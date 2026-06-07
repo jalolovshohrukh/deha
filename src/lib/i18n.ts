@@ -32,6 +32,7 @@ export const t = {
   records: "сабт",
   close: "Пӯшидан",
   confirmDelete: "Дар ҳақиқат нест кунам?",
+  confirmLogout: "Дар ҳақиқат аз система мебароед?",
   genericError: "Хатогӣ рух дод — аз нав кӯшиш кунед",
 
   // auth
