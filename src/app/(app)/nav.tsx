@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useLayoutEffect, useRef, useState } from "react";
-import { LayoutDashboard, HandCoins, Landmark, Receipt, Target, Route, LogOut } from "lucide-react";
+import { LayoutDashboard, HandCoins, Landmark, Receipt, Target, Route, LogOut, UserCog } from "lucide-react";
 import { t } from "@/lib/i18n";
 import { logoutAction } from "./logout-action";
 
@@ -79,21 +79,23 @@ export default function Nav({ name, role }: { name: string; role: string }) {
                 {it.label}
               </Link>
             ))}
+          </nav>
+
+          <div className="flex items-center gap-2">
             {role === "admin" && (
               <Link
-                href="/audit"
-                className={`rounded-lg px-3 py-1.5 text-sm font-medium transition ${
-                  isActive("/audit")
+                href="/users"
+                title={t.users}
+                aria-label={t.users}
+                className={`rounded-lg p-2 transition ${
+                  isActive("/users")
                     ? "bg-refresh-surface text-refresh-text"
                     : "text-refresh-muted hover:bg-refresh-surface hover:text-refresh-text"
                 }`}
               >
-                {t.audit}
+                <UserCog className="h-4 w-4" />
               </Link>
             )}
-          </nav>
-
-          <div className="flex items-center gap-2">
             <span className="hidden text-sm text-refresh-muted sm:inline">{name}</span>
             <span
               className={`chip ${

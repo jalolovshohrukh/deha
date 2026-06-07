@@ -45,6 +45,14 @@ export const t = {
   roleAdmin: "Админ",
   roleViewer: "Меҳмон",
 
+  // users
+  users: "Корбарон",
+  newUser: "Корбари нав",
+  loginUsername: "Логин",
+  displayName: "Ном",
+  role: "Нақш",
+  you: "Шумо",
+
   // accounts
   account: "Ҳисоб",
   accountName: "Номи ҳисоб",
