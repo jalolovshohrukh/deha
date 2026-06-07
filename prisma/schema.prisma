@@ -1,0 +1,97 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String     @id @default(cuid())
+  username  String     @unique
+  name      String
+  password  String
+  role      String     @default("viewer") // admin | viewer
+  createdAt DateTime   @default(now())
+  audits    AuditLog[]
+}
+
+model Account {
+  id             String     @id @default(cuid())
+  name           String
+  type           String     @default("bank") // bank | cash | wallet
+  openingBalance Float      @default(0)
+  createdAt      DateTime   @default(now())
+  donations      Donation[]
+  expenses       Expense[]
+  transfersOut   Transfer[] @relation("transferFrom")
+  transfersIn    Transfer[] @relation("transferTo")
+}
+
+model Donor {
+  id          String     @id @default(cuid())
+  firstName   String?
+  familyName  String?
+  age         Int?
+  isAnonymous Boolean    @default(false)
+  createdAt   DateTime   @default(now())
+  donations   Donation[]
+}
+
+model Donation {
+  id        String   @id @default(cuid())
+  amount    Float
+  date      DateTime
+  note      String?
+  donor     Donor?   @relation(fields: [donorId], references: [id])
+  donorId   String?
+  account   Account? @relation(fields: [accountId], references: [id])
+  accountId String?
+  createdAt DateTime @default(now())
+}
+
+model Expense {
+  id        String   @id @default(cuid())
+  amount    Float
+  date      DateTime
+  category  String?
+  payee     String?
+  note      String?
+  account   Account  @relation(fields: [accountId], references: [id])
+  accountId String
+  createdAt DateTime @default(now())
+}
+
+model Transfer {
+  id            String   @id @default(cuid())
+  amount        Float
+  date          DateTime
+  note          String?
+  fromAccount   Account  @relation("transferFrom", fields: [fromAccountId], references: [id])
+  fromAccountId String
+  toAccount     Account  @relation("transferTo", fields: [toAccountId], references: [id])
+  toAccountId   String
+  createdAt     DateTime @default(now())
+}
+
+model Target {
+  id        String    @id @default(cuid())
+  title     String
+  amount    Float
+  sequence  Int       @default(0)
+  status    String    @default("active") // active | reached
+  reachedAt DateTime?
+  createdAt DateTime  @default(now())
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  action    String // create | update | delete | transfer | login
+  entity    String
+  entityId  String?
+  details   String?
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    String?
+  createdAt DateTime @default(now())
+}
