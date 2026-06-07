@@ -47,7 +47,6 @@ export default async function DashboardPage() {
         <MetricTile tone="pink" label={t.totalSpent} value={somoni(totals.totalSpent)} icon={<Icon name="receipt" size={20} />} />
         <MetricTile tone="blue" label={t.currentBalance} value={somoni(totals.balance)} icon={<Icon name="wallet" size={20} />} />
         <MetricTile tone="periwinkle" label={t.donorsCount} value={String(totals.donorsCount)} icon={<Icon name="users" size={20} />} />
-        <MetricTile tone="lavender" label={t.avgDonation} value={somoni(totals.avgDonation)} icon={<Icon name="trending-up" size={20} />} />
       </div>
 
       {/* Current target */}
